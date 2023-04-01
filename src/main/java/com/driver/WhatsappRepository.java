@@ -53,6 +53,10 @@ public class WhatsappRepository {
         }
         String admin = users.get(0).getName();
         adminMap.put(group, userData.get(admin));
+        List<Message> messageList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
+        groupMessageMap.put(group, messageList);
+        groupUserMap.put(group, userList);
         return group;
     }
 
