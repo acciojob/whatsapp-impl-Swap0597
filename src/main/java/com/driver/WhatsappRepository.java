@@ -32,6 +32,7 @@ public class WhatsappRepository {
         if(userMobile.contains(mobile)){
             throw new Exception("User already exists");
         }
+
         User user = new User(name, mobile);
         userData.put(name, user);
         userMobile.add(mobile);
@@ -55,7 +56,7 @@ public class WhatsappRepository {
         List<Message> messageList = new ArrayList<>();
         List<User> userList = new ArrayList<>();
         groupMessageMap.put(group, messageList);
-        groupUserMap.put(group, userList);
+        groupUserMap.put(group, users);
         return group;
     }
 
