@@ -29,13 +29,12 @@ public class WhatsappRepository {
     }
 
     public String createUser(String name, String mobile) throws Exception {
-        for(String s : userData.keySet()){
-            if(userData.get(s).getMobile().equals(mobile)){
-                throw new Exception("User already exists");
-            }
+        if(userMobile.contains(mobile)){
+            throw new Exception("User already exists");
         }
         User user = new User(name, mobile);
         userData.put(name, user);
+        userMobile.add(mobile);
         return "SUCCESS";
     }
 
@@ -43,7 +42,7 @@ public class WhatsappRepository {
         int size = users.size();
         Group group;
         if(size > 2){
-            customGroupCount += 1;
+            this.customGroupCount += 1;
             String grpName = "Group "+customGroupCount;
             group = new Group(grpName, size);
         }
@@ -51,8 +50,8 @@ public class WhatsappRepository {
             String grpName = users.get(1).getName();
             group = new Group(grpName, size);
         }
-        String admin = users.get(0).getName();
-        adminMap.put(group, userData.get(admin));
+        User admin = users.get(0);
+        adminMap.put(group, admin);
         List<Message> messageList = new ArrayList<>();
         List<User> userList = new ArrayList<>();
         groupMessageMap.put(group, messageList);
@@ -61,7 +60,7 @@ public class WhatsappRepository {
     }
 
     public int createMessage(String content) {
-        messageId += 1;
+        this.messageId += 1;
         Message message = new Message(messageId, content);
         return messageId;
     }
@@ -70,19 +69,20 @@ public class WhatsappRepository {
         if(!groupUserMap.containsKey(group)){
             throw new Exception("Group does not exist");
         }
-
         List<User> list = groupUserMap.get(group);
+        boolean flag = false;
         for(User user: list){
             if(user.equals(sender)){
+                flag = true;
                 senderMap.put(message, sender);
                 List<Message> messageList = groupMessageMap.get(group);
                 messageList.add(message);
                 groupMessageMap.put(group, messageList);
                 return messageList.size();
             }
-            else{
-                throw new Exception("You are not allowed to send message");
-            }
+        }
+        if(flag == false){
+            throw new Exception("You are not allowed to send message");
         }
         return groupMessageMap.get(group).size();
     }
